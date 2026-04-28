@@ -7,329 +7,79 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --gold: #c9a84c;
-    --gold-light: #e8c96e;
-    --dark: #0d0700;
-    --dark2: #1a0e02;
-    --parch: #f5ecd7;
-    --green: #2d6a2d;
-    --red: #7a2020;
-    --amber: #7a5c10;
-    --border: rgba(201,168,76,0.25);
-    --text: #f0e6cc;
-    --text2: #a89060;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body {
-    min-height: 100vh;
-    background: var(--dark);
-    color: var(--text);
-    font-family: 'IM Fell English', serif;
-  }
-  body {
-    background-image:
-      radial-gradient(ellipse at 20% 10%, rgba(201,168,76,0.07) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 90%, rgba(100,20,20,0.12) 0%, transparent 50%),
-      repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(201,168,76,0.02) 60px, rgba(201,168,76,0.02) 61px),
-      repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.02) 60px, rgba(201,168,76,0.02) 61px);
-  }
-
-  header {
-    text-align: center;
-    padding: 2.5rem 1rem 1.5rem;
-    border-bottom: 1px solid var(--border);
-    position: relative;
-    overflow: hidden;
-  }
-  header::before {
-    content: '⚡';
-    position: absolute; top: 10px; left: 20px;
-    font-size: 40px; opacity: 0.06;
-  }
-  header::after {
-    content: '⚡';
-    position: absolute; bottom: 10px; right: 20px;
-    font-size: 40px; opacity: 0.06;
-  }
-  .site-title {
-    font-family: 'Cinzel', serif;
-    font-size: clamp(22px, 5vw, 36px);
-    font-weight: 700;
-    color: var(--gold);
-    letter-spacing: 4px;
-    text-shadow: 0 0 40px rgba(201,168,76,0.3);
-  }
-  .site-title span { color: var(--gold-light); }
-  .site-sub {
-    font-size: 13px;
-    color: var(--text2);
-    margin-top: 6px;
-    font-style: italic;
-    letter-spacing: 1px;
-  }
-
-  .divider {
-    display: flex; align-items: center; justify-content: center;
-    gap: 12px; margin-top: 14px;
-  }
-  .divider-line { flex: 1; max-width: 80px; height: 1px; background: var(--border); }
-  .divider-icon { color: var(--gold); font-size: 14px; opacity: 0.6; }
-
-  main { max-width: 860px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
-
-  .legend {
-    display: flex; gap: 16px; justify-content: center;
-    flex-wrap: wrap; margin-bottom: 1.2rem;
-  }
-  .leg-item {
-    display: flex; align-items: center; gap: 6px;
-    font-size: 11px; color: var(--text2); font-style: italic;
-  }
-  .leg-dot { width: 14px; height: 14px; border-radius: 4px; }
-  .leg-dot.c { background: var(--green); }
-  .leg-dot.p { background: var(--amber); }
-  .leg-dot.w { background: var(--red); }
-
-  #hint-area { text-align: center; margin-bottom: 10px; min-height: 24px; }
-  .hint-badge {
-    display: inline-block;
-    background: rgba(201,168,76,0.12);
-    border: 1px solid rgba(201,168,76,0.3);
-    color: var(--gold);
-    border-radius: 20px;
-    padding: 4px 16px;
-    font-size: 12px;
-    font-style: italic;
-  }
-
-  #tries-counter {
-    text-align: center;
-    font-size: 12px;
-    color: var(--text2);
-    margin-bottom: 10px;
-    font-style: italic;
-  }
-
-  #msg {
-    text-align: center; font-size: 13px;
-    color: var(--text2); margin-bottom: 10px;
-    min-height: 20px; font-style: italic;
-  }
-  #msg.error { color: #e06060; }
-  #msg.found { color: var(--gold); }
-
-  .search-wrap { position: relative; margin-bottom: 8px; }
-  .search-row { display: flex; gap: 8px; }
-  #char-input {
-    flex: 1;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-family: 'IM Fell English', serif;
-    font-size: 14px;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-  #char-input:focus { border-color: rgba(201,168,76,0.5); }
-  #char-input::placeholder { color: var(--text2); font-style: italic; }
-  #char-input:disabled { opacity: 0.4; cursor: not-allowed; }
-  #guess-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    padding: 0 20px;
-    background: linear-gradient(135deg, var(--gold), #a07830);
-    color: #1a0a00;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-    white-space: nowrap;
-  }
-  #guess-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-  #guess-btn:active { transform: translateY(0); }
-  #guess-btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
-
-  #suggestions {
-    position: absolute; top: 100%; left: 0;
-    right: 80px; z-index: 100;
-    background: #1e1206;
-    border: 1px solid var(--border);
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    max-height: 200px; overflow-y: auto;
-    display: none;
-  }
-  .sugg-item {
-    padding: 8px 14px; cursor: pointer;
-    font-size: 13px; color: var(--text);
-    border-bottom: 1px solid rgba(201,168,76,0.08);
-    transition: background 0.15s;
-  }
-  .sugg-item:hover { background: rgba(201,168,76,0.08); }
-  .sugg-item:last-child { border-bottom: none; }
-
-  .table-wrap { overflow-x: auto; margin-top: 12px; }
-  table {
-    border-collapse: separate;
-    border-spacing: 3px;
-    min-width: 820px;
-    width: 100%;
-  }
-  thead th {
-    font-family: 'Cinzel', serif;
-    font-size: 9px;
-    font-weight: 600;
-    color: var(--text2);
-    text-align: center;
-    letter-spacing: 0.5px;
-    padding: 4px 2px;
-    white-space: nowrap;
-    border-bottom: 1px solid var(--border);
-  }
-  thead th:first-child { text-align: left; }
-
-  .cell {
-    border-radius: 6px;
-    padding: 6px 4px;
-    text-align: center;
-    font-size: 10px;
-    font-family: 'IM Fell English', serif;
-    color: #fff;
-    vertical-align: middle;
-    min-height: 42px;
-    min-width: 60px;
-    transition: background 0.3s;
-    border: 1px solid rgba(201,168,76,0.18);
-  }
-  .cell.name-cell {
-    text-align: left;
-    padding-left: 8px;
-    min-width: 140px;
-    font-size: 10px;
-    background: rgba(255,255,255,0.04);
-    color: var(--text);
-    border: 1px solid rgba(201,168,76,0.2);
-  }
-  .cell.correct { background: var(--green); border-color: rgba(80,160,80,0.4); }
-  .cell.wrong { background: var(--red); border-color: rgba(160,60,60,0.4); }
-  .cell.partial { background: var(--amber); border-color: rgba(180,140,40,0.4); }
-  .cell.img-cell {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,168,76,0.2);
-    padding: 3px;
-    min-width: 52px; width: 52px;
-  }
-  .cell.img-cell img {
-    width: 44px; height: 44px;
-    object-fit: cover; object-position: top;
-    border-radius: 4px; display: block;
-  }
-  .cell.img-cell .ph {
-    width: 44px; height: 44px; border-radius: 4px;
-    background: rgba(201,168,76,0.12);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px;
-  }
-  .row-anim { animation: rowIn 0.35s ease; }
-  @keyframes rowIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  #win-box {
-    display: none;
-    text-align: center;
-    margin-top: 2rem;
-    padding: 2rem;
-    background: rgba(201,168,76,0.07);
-    border: 1px solid rgba(201,168,76,0.25);
-    border-radius: 12px;
-  }
-  .win-title {
-    font-family: 'Cinzel', serif;
-    font-size: 24px;
-    color: var(--gold);
-    margin-bottom: 8px;
-    text-shadow: 0 0 30px rgba(201,168,76,0.4);
-  }
-  .win-sub { font-size: 14px; color: var(--text2); font-style: italic; margin-bottom: 16px; }
-  #play-again-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 1px;
-    padding: 10px 24px;
-    background: linear-gradient(135deg, var(--gold), #a07830);
-    color: #1a0a00;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.1s;
-  }
-  #play-again-btn:hover { opacity: 0.88; transform: translateY(-1px); }
-
-  #lose-box {
-    display: none;
-    text-align: center;
-    margin-top: 1.5rem;
-    padding: 1.5rem;
-    background: rgba(122,32,32,0.15);
-    border: 1px solid rgba(122,32,32,0.3);
-    border-radius: 12px;
-  }
-  .lose-title { font-family: 'Cinzel', serif; font-size: 18px; color: #e06060; margin-bottom: 6px; }
-  .lose-answer { font-size: 15px; color: var(--text2); font-style: italic; margin-bottom: 14px; }
-  .lose-answer strong { color: var(--gold); }
-  #play-again-btn2 {
-    font-family: 'Cinzel', serif; font-size: 13px; font-weight: 600;
-    letter-spacing: 1px; padding: 10px 24px;
-    background: linear-gradient(135deg, var(--gold), #a07830);
-    color: #1a0a00; border: none; border-radius: 8px;
-    cursor: pointer; transition: opacity 0.2s;
-  }
-  #play-again-btn2:hover { opacity: 0.88; }
-
-  footer {
-    text-align: center;
-    padding: 1.5rem;
-    border-top: 1px solid var(--border);
-    color: var(--text2);
-    font-size: 11px;
-    font-style: italic;
-  }
-
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 3px; }
+  :root{--gold:#c9a84c;--gold-light:#e8c96e;--dark:#0d0700;--green:#2d6a2d;--red:#7a2020;--border:rgba(201,168,76,0.25);--text:#f0e6cc;--text2:#a89060;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{min-height:100vh;background:var(--dark);color:var(--text);font-family:'IM Fell English',serif;}
+  body{background-image:radial-gradient(ellipse at 20% 10%,rgba(201,168,76,0.07) 0%,transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(100,20,20,0.12) 0%,transparent 50%);}
+  header{text-align:center;padding:2rem 1rem 1.2rem;border-bottom:1px solid var(--border);}
+  .site-title{font-family:'Cinzel',serif;font-size:clamp(20px,5vw,34px);font-weight:700;color:var(--gold);letter-spacing:4px;text-shadow:0 0 40px rgba(201,168,76,0.3);}
+  .site-title span{color:var(--gold-light);}
+  .site-sub{font-size:12px;color:var(--text2);margin-top:5px;font-style:italic;letter-spacing:1px;}
+  .divider{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;}
+  .divider-line{flex:1;max-width:80px;height:1px;background:var(--border);}
+  main{max-width:1100px;margin:0 auto;padding:1.2rem 0.8rem 4rem;}
+  .legend{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:1rem;}
+  .leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text2);font-style:italic;}
+  .leg-dot{width:13px;height:13px;border-radius:3px;}
+  .leg-dot.c{background:var(--green);}
+  .leg-dot.w{background:var(--red);}
+  #hint-area{text-align:center;margin-bottom:8px;min-height:22px;}
+  .hint-badge{display:inline-block;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.3);color:var(--gold);border-radius:20px;padding:3px 14px;font-size:12px;font-style:italic;}
+  #tries-counter{text-align:center;font-size:12px;color:var(--text2);margin-bottom:8px;font-style:italic;}
+  #msg{text-align:center;font-size:13px;color:var(--text2);margin-bottom:8px;min-height:18px;font-style:italic;}
+  #msg.error{color:#e06060;}
+  .search-wrap{position:relative;margin-bottom:8px;}
+  .search-row{display:flex;gap:8px;}
+  #char-input{flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:'IM Fell English',serif;font-size:14px;color:var(--text);outline:none;transition:border-color 0.2s;}
+  #char-input:focus{border-color:rgba(201,168,76,0.5);}
+  #char-input::placeholder{color:var(--text2);font-style:italic;}
+  #char-input:disabled{opacity:0.4;cursor:not-allowed;}
+  #guess-btn{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:1px;padding:0 20px;background:linear-gradient(135deg,var(--gold),#a07830);color:#1a0a00;border:none;border-radius:8px;cursor:pointer;transition:opacity 0.2s,transform 0.1s;white-space:nowrap;}
+  #guess-btn:hover{opacity:0.88;transform:translateY(-1px);}
+  #guess-btn:disabled{opacity:0.3;cursor:not-allowed;transform:none;}
+  #suggestions{position:absolute;top:100%;left:0;right:80px;z-index:100;background:#1e1206;border:1px solid var(--border);border-top:none;border-radius:0 0 8px 8px;max-height:200px;overflow-y:auto;display:none;}
+  .sugg-item{padding:7px 14px;cursor:pointer;font-size:13px;color:var(--text);border-bottom:1px solid rgba(201,168,76,0.08);transition:background 0.15s;}
+  .sugg-item:hover{background:rgba(201,168,76,0.08);}
+  .table-wrap{overflow-x:auto;margin-top:10px;}
+  table{border-collapse:separate;border-spacing:3px;min-width:1050px;width:100%;}
+  thead th{font-family:'Cinzel',serif;font-size:9px;font-weight:600;color:var(--text2);text-align:center;letter-spacing:0.5px;padding:4px 2px;white-space:nowrap;border-bottom:1px solid var(--border);}
+  thead th:first-child{text-align:left;}
+  .cell{border-radius:6px;padding:5px 3px;text-align:center;font-size:10px;font-family:'IM Fell English',serif;color:#fff;vertical-align:middle;min-height:52px;min-width:58px;border:1px solid rgba(201,168,76,0.18);}
+  .cell.name-cell{text-align:left;padding-left:7px;min-width:130px;font-size:10px;background:rgba(255,255,255,0.04);color:var(--text);border-color:rgba(201,168,76,0.2);}
+  .cell.img-cell{background:rgba(255,255,255,0.04);border-color:rgba(201,168,76,0.2);padding:3px;min-width:54px;width:54px;}
+  .cell.img-cell img{width:46px;height:46px;object-fit:cover;object-position:top center;border-radius:4px;display:block;}
+  .cell.img-cell .ph{width:46px;height:46px;border-radius:4px;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .cell.correct{background:var(--green);border-color:rgba(80,160,80,0.4);}
+  .cell.wrong{background:var(--red);border-color:rgba(160,60,60,0.4);}
+  .row-anim{animation:rowIn 0.35s ease;}
+  @keyframes rowIn{from{opacity:0;transform:translateY(-8px);}to{opacity:1;transform:translateY(0);}}
+  #win-box{display:none;text-align:center;margin-top:1.5rem;padding:1.8rem;background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.25);border-radius:12px;}
+  .win-title{font-family:'Cinzel',serif;font-size:22px;color:var(--gold);margin-bottom:7px;}
+  .win-sub{font-size:13px;color:var(--text2);font-style:italic;margin-bottom:14px;}
+  #play-again-btn,#play-again-btn2{font-family:'Cinzel',serif;font-size:12px;font-weight:600;letter-spacing:1px;padding:9px 22px;background:linear-gradient(135deg,var(--gold),#a07830);color:#1a0a00;border:none;border-radius:8px;cursor:pointer;}
+  #lose-box{display:none;text-align:center;margin-top:1.2rem;padding:1.4rem;background:rgba(122,32,32,0.15);border:1px solid rgba(122,32,32,0.3);border-radius:12px;}
+  .lose-title{font-family:'Cinzel',serif;font-size:17px;color:#e06060;margin-bottom:5px;}
+  .lose-answer{font-size:14px;color:var(--text2);font-style:italic;margin-bottom:13px;}
+  .lose-answer strong{color:var(--gold);}
+  footer{text-align:center;padding:1.2rem;border-top:1px solid var(--border);color:var(--text2);font-size:11px;font-style:italic;}
+  ::-webkit-scrollbar{width:5px;height:5px;}
+  ::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.3);border-radius:3px;}
 </style>
 </head>
 <body>
-
 <header>
   <div class="site-title">✦ HARRY<span>POTTER</span>DLE ✦</div>
-  <div class="site-sub">Guess the Harry Potter character</div>
-  <div class="divider">
-    <div class="divider-line"></div>
-    <div class="divider-icon">⚡</div>
-    <div class="divider-line"></div>
-  </div>
+  <div class="site-sub">Guess the character from the films</div>
+  <div class="divider"><div class="divider-line"></div><span style="color:var(--gold);font-size:13px;opacity:.6">⚡</span><div class="divider-line"></div></div>
 </header>
-
 <main>
   <div class="legend">
     <div class="leg-item"><div class="leg-dot c"></div>Correct</div>
-    <div class="leg-item"><div class="leg-dot w"></div>Wrong · ▲ Born Later · ▼ Born Earlier</div>
+    <div class="leg-item"><div class="leg-dot w"></div>Wrong &nbsp;·&nbsp; ▲ = target born later &nbsp;·&nbsp; ▼ = target born earlier</div>
   </div>
-
   <div id="hint-area"></div>
   <div id="tries-counter"></div>
   <div id="msg">Start guessing!</div>
-
   <div class="search-wrap">
     <div class="search-row">
       <input id="char-input" type="text" placeholder="Type a character name..." autocomplete="off"/>
@@ -337,12 +87,11 @@
     </div>
     <div id="suggestions"></div>
   </div>
-
   <div class="table-wrap">
-    <table id="guess-table">
+    <table>
       <thead>
         <tr>
-          <th style="min-width:140px;">Character</th>
+          <th style="min-width:130px;text-align:left;">Character</th>
           <th>Image</th>
           <th>Gender</th>
           <th>House</th>
@@ -350,7 +99,7 @@
           <th>Status</th>
           <th>1st Film</th>
           <th>Birth Year</th>
-          <th>Blood Status</th>
+          <th>Blood</th>
           <th>Boggart</th>
           <th>Patronus</th>
         </tr>
@@ -358,7 +107,6 @@
       <tbody id="guesses-body"></tbody>
     </table>
   </div>
-
   <div id="win-box">
     <div class="win-title">✨ Magical! ✨</div>
     <div class="win-sub" id="win-detail"></div>
@@ -370,284 +118,164 @@
     <button id="play-again-btn2" onclick="startGame()">Try Again</button>
   </div>
 </main>
-
-<footer>
-  HarryPottterdle — A fan-made tribute. Not affiliated with Warner Bros. or J.K. Rowling.
-</footer>
-
+<footer>HarryPotterdle — A fan-made tribute. Not affiliated with Warner Bros. or J.K. Rowling.</footer>
 <script>
-const WIKI = 'https://static.wikia.nocookie.net/harrypotter/images/';
-const CHARACTERS = [
-  // ── Core Trio & Dumbledore ──
-  {name:"Harry James Potter",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Half-Blood",boggart:"Dementor",patronus:"Stag",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c2/HarryPotter.jpg"},
-  {name:"Hermione Jean Granger",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1979,blood:"Muggle-Born",boggart:"Failure",patronus:"Otter",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c2/Hermione_Granger.jpg"},
-  {name:"Ronald Bilius Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Spider",patronus:"Jack Russell Terrier",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/70/Ron_Weasley_DH.jpg"},
-  {name:"Albus Percival Wulfric Brian Dumbledore",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1881,blood:"Half-Blood",boggart:"Ariana's corpse",patronus:"Phoenix",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/7a/Dumbledore_EA.jpg"},
-  // ── Hogwarts Staff ──
-  {name:"Severus Snape",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:1,birthYear:1960,blood:"Half-Blood",boggart:"Unknown",patronus:"Doe",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/a2/Snape.jpg"},
-  {name:"Minerva McGonagall",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1935,blood:"Half-Blood",boggart:"Unknown",patronus:"Cat",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/3f/McGonagall.jpg"},
-  {name:"Rubeus Hagrid",gender:"Male",house:"Gryffindor",species:"Half-Giant",status:"Alive",film:1,birthYear:1928,blood:"Half-Blood",boggart:"Lord Voldemort",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/2/28/Rubeus_Hagrid.jpg"},
-  {name:"Filius Flitwick",gender:"Male",house:"Ravenclaw",species:"Half-Goblin",status:"Alive",film:1,birthYear:1958,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/30/Flitwick.jpg"},
-  {name:"Pomona Sprout",gender:"Female",house:"Hufflepuff",species:"Human",status:"Alive",film:1,birthYear:1941,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/cb/Sprout_hbp_promo.jpg"},
-  {name:"Sybill Trelawney",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:3,birthYear:1958,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/9/91/Trelawney.jpg"},
-  {name:"Argus Filch",gender:"Male",house:"None",species:"Squib",status:"Alive",film:1,birthYear:1935,blood:"Squib",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c0/Argus_Filch.jpg"},
-  {name:"Dolores Jane Umbridge",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:5,birthYear:1961,blood:"Half-Blood",boggart:"Unknown",patronus:"Cat",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/ac/Dolores_Umbridge.jpg"},
-  {name:"Gilderoy Lockhart",gender:"Male",house:"Ravenclaw",species:"Human",status:"Alive",film:2,birthYear:1964,blood:"Half-Blood",boggart:"His own memory loss",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c8/Lockhart.jpg"},
-  {name:"Remus John Lupin",gender:"Male",house:"Gryffindor",species:"Werewolf",status:"Dead",film:3,birthYear:1960,blood:"Half-Blood",boggart:"Full Moon",patronus:"Wolf",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/cf/Remus_Lupin.jpg"},
-  {name:"Alastor Mad-Eye Moody",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:4,birthYear:1930,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/a9/Mad-Eye_Moody.jpg"},
-  {name:"Quirinus Quirrell",gender:"Male",house:"None",species:"Human",status:"Dead",film:1,birthYear:1967,blood:"Half-Blood",boggart:"Lord Voldemort",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/9/9c/Quirrell.jpg"},
-  // ── Weasley Family ──
-  {name:"Arthur Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:2,birthYear:1950,blood:"Pure-Blood",boggart:"Unknown",patronus:"Weasel",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/a6/Arthur-Weasley.jpg"},
-  {name:"Molly Weasley",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1950,blood:"Pure-Blood",boggart:"Dead family",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/a4/Mollyweasley.jpg"},
-  {name:"Bill Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:7,birthYear:1970,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/34/Bill_Weasley.jpg"},
-  {name:"Charlie Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1972,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/1/17/Charlie_Weasley_DH.jpg"},
-  {name:"Percy Ignatius Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1976,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/67/Percy_Weasley_HBP.jpg"},
-  {name:"Fred Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1978,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c8/Fred_Weasley.jpg"},
-  {name:"George Fabian Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1978,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/3e/George_Weasley.jpg"},
-  {name:"Ginevra Molly Weasley",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1981,blood:"Pure-Blood",boggart:"Lord Voldemort",patronus:"Horse",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/73/Ginny_Weasley.jpg"},
-  // ── Other Gryffindors ──
-  {name:"Neville Frank Longbottom",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Professor Snape",patronus:"Non-corporeal",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/ce/Neville_Longbottom.jpg"},
-  {name:"Sirius Orion Black",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:3,birthYear:1959,blood:"Pure-Blood",boggart:"Lord Voldemort",patronus:"Dog",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/7e/Sirius_Black.jpg"},
-  {name:"Peter Pettigrew",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:3,birthYear:1960,blood:"Pure-Blood",boggart:"Lord Voldemort",patronus:"Rat",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/34/Pettigrew.jpg"},
-  {name:"Dean Thomas",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/d/d8/Dean_Thomas.jpg"},
-  {name:"Seamus Finnigan",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c1/Seamus_Finnigan.jpg"},
-  {name:"Lavender Brown",gender:"Female",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/b/b0/Lavender_Brown.jpg"},
-  {name:"Parvati Patil",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Unknown",boggart:"Mummy",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/2/2b/Parvati_Patil.jpg"},
-  {name:"Oliver Wood",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1975,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/b/ba/Oliver_Wood.jpg"},
-  {name:"Katie Bell",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1979,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/82/Katie_Bell.jpg"},
-  {name:"Angelina Johnson",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1977,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/6c/Angelina_Johnson.jpg"},
-  {name:"Lee Jordan",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1978,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/0e/Lee_Jordan.jpg"},
-  {name:"Cormac McLaggen",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:6,birthYear:1978,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/78/McLaggen.jpg"},
-  {name:"Rufus Scrimgeour",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:7,birthYear:1944,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/3c/Rufus_Scrimgeour.jpg"},
-  {name:"Lily J. Potter",gender:"Female",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1960,blood:"Muggle-Born",boggart:"Unknown",patronus:"Doe",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/cb/Lily_Potter.jpg"},
-  {name:"James Potter",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1960,blood:"Pure-Blood",boggart:"Unknown",patronus:"Stag",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/58/James_Potter.jpg"},
-  // ── Slytherins ──
-  {name:"Tom Marvolo Riddle",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:1,birthYear:1926,blood:"Half-Blood",boggart:"His own death",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/a8/Voldemort.jpg"},
-  {name:"Draco Lucius Malfoy",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Lord Voldemort",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/5f/Draco_Malfoy.jpg"},
-  {name:"Lucius Abraxas Malfoy",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1954,blood:"Pure-Blood",boggart:"Lord Voldemort",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c5/Lucius_Malfoy.jpg"},
-  {name:"Narcissa Black Malfoy",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:5,birthYear:1955,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/70/Narcissa_Malfoy.jpg"},
-  {name:"Bellatrix Lestrange",gender:"Female",house:"Slytherin",species:"Human",status:"Dead",film:5,birthYear:1951,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/4/4e/Bellatrix_Lestrange.jpg"},
-  {name:"Pansy Parkinson",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/7e/Pansy_Parkinson.jpg"},
-  {name:"Vincent Crabbe",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/6b/Crabbe_DH.jpg"},
-  {name:"Gregory Goyle",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/1/1e/Goyle.jpg"},
-  {name:"Blaise Zabini",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:6,birthYear:1980,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/ec/Blaise_Zabini.jpg"},
-  {name:"Theodore Nott",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:5,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/2/22/Theodore_Nott.jpg"},
-  {name:"Millicent Bulstrode",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:2,birthYear:1980,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:""},
-  {name:"Bartemius Crouch Jr",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:4,birthYear:1962,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/b/bf/Barty_Crouch_Jr.jpg"},
-  {name:"Igor Karkaroff",gender:"Male",house:"Durmstrang",species:"Human",status:"Dead",film:4,birthYear:1950,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/59/Igor_Karkaroff.jpg"},
-  {name:"Antonin Dolohov",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:5,birthYear:1945,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/8d/Dolohov.jpg"},
-  {name:"Yaxley",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:6,birthYear:1950,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c5/Yaxley.jpg"},
-  {name:"Phineas Nigellus Black",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:5,birthYear:1847,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/38/Phineas_Nigellus.jpg"},
-  // ── Ravenclaws ──
-  {name:"Luna Xenophilius Lovegood",gender:"Female",house:"Ravenclaw",species:"Human",status:"Alive",film:5,birthYear:1981,blood:"Pure-Blood",boggart:"Her mother's death",patronus:"Hare",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/ab/Luna_Lovegood.jpg"},
-  {name:"Cho Chang",gender:"Female",house:"Ravenclaw",species:"Human",status:"Alive",film:4,birthYear:1979,blood:"Unknown",boggart:"Unknown",patronus:"Swan",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/53/Cho_Chang.jpg"},
-  {name:"Padma Patil",gender:"Female",house:"Ravenclaw",species:"Human",status:"Alive",film:4,birthYear:1980,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e5/Padma_Patil.jpg"},
-  {name:"Helena Ravenclaw",gender:"Female",house:"Ravenclaw",species:"Ghost",status:"Dead",film:7,birthYear:1000,blood:"Unknown",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/4/42/Helena_Ravenclaw.jpg"},
-  {name:"Moaning Myrtle Warren",gender:"Female",house:"Ravenclaw",species:"Ghost",status:"Dead",film:2,birthYear:1928,blood:"Muggle-Born",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/9/9f/Moaning_Myrtle.jpg"},
-  // ── Hufflepuffs ──
-  {name:"Cedric Amos Diggory",gender:"Male",house:"Hufflepuff",species:"Human",status:"Dead",film:4,birthYear:1977,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/9/93/Cedric_Diggory.jpg"},
-  {name:"Nymphadora Tonks",gender:"Female",house:"Hufflepuff",species:"Human",status:"Dead",film:5,birthYear:1973,blood:"Half-Blood",boggart:"Lord Voldemort",patronus:"Wolf",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e7/Tonks.jpg"},
-  {name:"Hannah Abbott",gender:"Female",house:"Hufflepuff",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/87/Hannah_Abbott.jpg"},
-  {name:"Ernie Macmillan",gender:"Male",house:"Hufflepuff",species:"Human",status:"Alive",film:2,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e1/ErnieMacmillan.jpg"},
-  {name:"Justin Finch-Fletchley",gender:"Male",house:"Hufflepuff",species:"Human",status:"Alive",film:2,birthYear:1980,blood:"Muggle-Born",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/0c/Justin_Finch-Fletchley.jpg"},
-  {name:"Ludo Bagman",gender:"Male",house:"Hufflepuff",species:"Human",status:"Alive",film:4,birthYear:1959,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:""},
-  {name:"Cornelius Fudge",gender:"Male",house:"Hufflepuff",species:"Human",status:"Alive",film:2,birthYear:1939,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/a/a1/Cornelius_Fudge.jpg"},
-  // ── Ghosts ──
-  {name:"Sir Nicholas de Mimsy-Porpington",gender:"Male",house:"Gryffindor",species:"Ghost",status:"Dead",film:1,birthYear:1400,blood:"Unknown",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/8c/Nearly_Headless_Nick.jpg"},
-  {name:"Peeves the Poltergeist",gender:"Male",house:"None",species:"Poltergeist",status:"Alive",film:1,birthYear:993,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/f/f1/Peeves_the_Poltergeist.jpg"},
-  {name:"Bloody Baron",gender:"Male",house:"Slytherin",species:"Ghost",status:"Dead",film:1,birthYear:900,blood:"Unknown",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/8b/Bloody_Baron.jpg"},
-  {name:"Fat Friar",gender:"Male",house:"Hufflepuff",species:"Ghost",status:"Dead",film:1,birthYear:1000,blood:"Unknown",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Fat_Friar.jpg"},
-  // ── House Elves ──
-  {name:"Dobby",gender:"Male",house:"None",species:"House-Elf",status:"Dead",film:2,birthYear:1965,blood:"None",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/3d/Dobby.jpg"},
-  {name:"Kreacher",gender:"Male",house:"None",species:"House-Elf",status:"Alive",film:5,birthYear:1896,blood:"None",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/9/9e/Kreacher.jpg"},
-  // ── Creatures ──
-  {name:"Firenze",gender:"Male",house:"None",species:"Centaur",status:"Alive",film:1,birthYear:1960,blood:"None",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/6a/Firenze.jpg"},
-  {name:"Grawp",gender:"Male",house:"None",species:"Giant",status:"Alive",film:5,birthYear:1983,blood:"None",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/4/42/Grawp.jpg"},
-  {name:"Aragog",gender:"Male",house:"None",species:"Acromantula",status:"Dead",film:2,birthYear:1942,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/9/96/Aragog.jpg"},
-  {name:"Fawkes",gender:"Male",house:"None",species:"Phoenix",status:"Alive",film:2,birthYear:1000,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Fawkes.jpg"},
-  {name:"Hedwig",gender:"Female",house:"None",species:"Owl",status:"Dead",film:1,birthYear:1990,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/b/b8/Hedwig_flying.jpg"},
-  {name:"Nagini",gender:"Female",house:"None",species:"Snake",status:"Dead",film:1,birthYear:1900,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/d/d8/Nagini.jpg"},
-  {name:"Buckbeak the Hippogriff",gender:"Male",house:"None",species:"Hippogriff",status:"Alive",film:3,birthYear:1991,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/03/Buckbeak.jpg"},
-  {name:"Crookshanks",gender:"Male",house:"None",species:"Cat/Kneazle",status:"Alive",film:3,birthYear:1983,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/5e/Crookshanks.jpg"},
-  {name:"Scabbers",gender:"Male",house:"None",species:"Rat",status:"Alive",film:1,birthYear:1960,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/6f/Scabbers.jpg"},
-  {name:"Mrs Norris",gender:"Female",house:"None",species:"Cat",status:"Alive",film:1,birthYear:1986,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/b/b6/Mrs._Norris.jpg"},
-  {name:"Fluffy",gender:"Male",house:"None",species:"Three-Headed Dog",status:"Alive",film:1,birthYear:1990,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/9/9e/Fluffy.jpg"},
-  {name:"Norbert the Dragon",gender:"Male",house:"None",species:"Dragon",status:"Alive",film:1,birthYear:1992,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/5b/Norbert.jpg"},
-  {name:"Hungarian Horntail",gender:"Female",house:"None",species:"Dragon",status:"Alive",film:4,birthYear:1980,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/7a/Hungarian_Horntail.jpg"},
-  {name:"Thestral",gender:"Male",house:"None",species:"Thestral",status:"Alive",film:5,birthYear:1980,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/ef/Thestral.jpg"},
-  {name:"Errol",gender:"Male",house:"None",species:"Owl",status:"Alive",film:2,birthYear:1978,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/7/7c/Errol.jpg"},
-  {name:"Pigwidgeon",gender:"Male",house:"None",species:"Owl",status:"Alive",film:3,birthYear:1994,blood:"None",boggart:"None",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c4/Pigwidgeon.jpg"},
-  // ── Triwizard / International ──
-  {name:"Fleur Isabelle Delacour",gender:"Female",house:"Beauxbatons",species:"Part-Veela",status:"Alive",film:4,birthYear:1977,blood:"Half-Blood",boggart:"Lord Voldemort",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/62/Fleur_Delacour.jpg"},
-  {name:"Viktor Krum",gender:"Male",house:"Durmstrang",species:"Human",status:"Alive",film:4,birthYear:1976,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/f/fb/Viktor_Krum.jpg"},
-  {name:"Madam Maxime",gender:"Female",house:"Beauxbatons",species:"Half-Giant",status:"Alive",film:4,birthYear:1958,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/5b/Olympe_Maxime.jpg"},
-  // ── Order of the Phoenix / Other ──
-  {name:"Kingsley Shacklebolt",gender:"Male",house:"None",species:"Human",status:"Alive",film:5,birthYear:1959,blood:"Unknown",boggart:"Unknown",patronus:"Lynx",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Kingsley_Shacklebolt.jpg"},
-  {name:"Aberforth Dumbledore",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1884,blood:"Half-Blood",boggart:"Unknown",patronus:"Goat",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/1/12/Aberforth_Dumbledore.jpg"},
-  {name:"Mundungus Fletcher",gender:"Male",house:"None",species:"Human",status:"Alive",film:5,birthYear:1962,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/2/24/Mundungus_Fletcher.jpg"},
-  {name:"Fenrir Greyback",gender:"Male",house:"None",species:"Werewolf",status:"Alive",film:6,birthYear:1960,blood:"Unknown",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/f/f7/Fenrir_Greyback.jpg"},
-  {name:"Bartemius Crouch Sr",gender:"Male",house:"None",species:"Human",status:"Dead",film:4,birthYear:1940,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/33/Barty_Crouch_Sr.jpg"},
-  {name:"Rita Skeeter",gender:"Female",house:"None",species:"Human",status:"Alive",film:4,birthYear:1951,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c1/Rita_Skeeter.jpg"},
-  // ── Muggle / Dursley Family ──
-  {name:"Petunia Dursley",gender:"Female",house:"None",species:"Muggle",status:"Alive",film:1,birthYear:1959,blood:"Muggle",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/2/22/Petunia_Dursley.jpg"},
-  {name:"Vernon Dursley",gender:"Male",house:"None",species:"Muggle",status:"Alive",film:1,birthYear:1955,blood:"Muggle",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/4/40/Vernon_Dursley.jpg"},
-  {name:"Dudley Dursley",gender:"Male",house:"None",species:"Muggle",status:"Alive",film:1,birthYear:1980,blood:"Muggle",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e2/Dudley_Dursley.jpg"},
-  // ── Ministry of Magic ──
-  {name:"Mafalda Hopkirk",gender:"Female",house:"None",species:"Human",status:"Alive",film:5,birthYear:1958,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e7/Mafalda_Hopkirk.jpg"},
-  {name:"Dirk Cresswell",gender:"Male",house:"None",species:"Human",status:"Dead",film:7,birthYear:1960,blood:"Muggle-Born",boggart:"Unknown",patronus:"Unknown",
-   image:""},
-  {name:"Albert Runcorn",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1955,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/d/d9/Albert_Runcorn.jpg"},
-  {name:"Reg Cattermole",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1962,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/8f/Reg_Cattermole.jpg"},
-  // ── Other Named Characters ──
-  {name:"Griphook",gender:"Male",house:"None",species:"Goblin",status:"Dead",film:1,birthYear:1900,blood:"None",boggart:"Unknown",patronus:"None",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e6/Griphook.jpg"},
-  {name:"Tom the Innkeeper",gender:"Male",house:"None",species:"Human",status:"Alive",film:3,birthYear:1940,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/5/51/Tom_the_innkeeper.jpg"},
-  {name:"Madam Rosmerta",gender:"Female",house:"None",species:"Human",status:"Alive",film:3,birthYear:1960,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/2/21/Madam_Rosmerta.jpg"},
-  {name:"Charity Burbage",gender:"Female",house:"None",species:"Human",status:"Dead",film:7,birthYear:1960,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c0/Charity_Burbage.jpg"},
-  {name:"Walden Macnair",gender:"Male",house:"None",species:"Human",status:"Alive",film:3,birthYear:1952,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/3/36/Macnair.jpg"},
-  {name:"Scabior",gender:"Male",house:"None",species:"Human",status:"Dead",film:7,birthYear:1968,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/d/d5/Scabior.jpg"},
-  {name:"Xenophilius Lovegood",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1956,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e1/Xenophilius_Lovegood.jpg"},
-  {name:"Bathilda Bagshot",gender:"Female",house:"None",species:"Human",status:"Dead",film:7,birthYear:1881,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Bathilda_Bagshot.jpg"},
-  {name:"Stan Shunpike",gender:"Male",house:"None",species:"Human",status:"Alive",film:3,birthYear:1975,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/c/c5/Stan_Shunpike.jpg"},
-  {name:"Grindelwald",gender:"Male",house:"None",species:"Human",status:"Dead",film:7,birthYear:1883,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/6c/Grindelwald.jpg"},
-  {name:"Ariana Dumbledore",gender:"Female",house:"None",species:"Human",status:"Dead",film:7,birthYear:1885,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/e/e4/Ariana_Dumbledore.jpg"},
-  {name:"Ollivander",gender:"Male",house:"None",species:"Human",status:"Alive",film:1,birthYear:1907,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/1/1d/Garrick_Ollivander.jpg"},
-  {name:"Madam Pomfrey",gender:"Female",house:"None",species:"Human",status:"Alive",film:1,birthYear:1950,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/2/25/Madam_Pomfrey.jpg"},
-  {name:"Amelia Susan Bones",gender:"Female",house:"None",species:"Human",status:"Dead",film:5,birthYear:1950,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/64/Amelia_Bones.jpg"},
-  {name:"Pius Thicknesse",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1953,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/8a/Pius_Thicknesse.jpg"},
-  // ── Founders ──
-  {name:"Godric Gryffindor",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:2,birthYear:900,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/8/8d/Godric_Gryffindor.jpg"},
-  {name:"Salazar Slytherin",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:2,birthYear:900,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/6d/Salazar_Slytherin.jpg"},
-  {name:"Helga Hufflepuff",gender:"Female",house:"Hufflepuff",species:"Human",status:"Dead",film:1,birthYear:900,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/0/07/Helga_Hufflepuff.jpg"},
-  {name:"Rowena Ravenclaw",gender:"Female",house:"Ravenclaw",species:"Human",status:"Dead",film:1,birthYear:900,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",
-   image:"https://static.wikia.nocookie.net/harrypotter/images/6/69/Rowena_Ravenclaw.jpg"},
+// Species categories:
+// Human | Half-Human | Non-Human Humanoid | Ghost | Animal | Magical Creature
+
+const CHARACTERS=[
+// ── FILM 1: Philosopher's Stone ──
+{name:"Harry Potter",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Half-Blood",boggart:"Dementor",patronus:"Stag",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c2/HarryPotter.jpg"},
+{name:"Hermione Granger",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1979,blood:"Muggle-Born",boggart:"Failure",patronus:"Otter",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c2/Hermione_Granger.jpg"},
+{name:"Ron Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Spider",patronus:"Jack Russell Terrier",img:"https://static.wikia.nocookie.net/harrypotter/images/7/70/Ron_Weasley_DH.jpg"},
+{name:"Albus Dumbledore",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1881,blood:"Half-Blood",boggart:"Ariana's corpse",patronus:"Phoenix",img:"https://static.wikia.nocookie.net/harrypotter/images/7/7a/Dumbledore_EA.jpg"},
+{name:"Severus Snape",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:1,birthYear:1960,blood:"Half-Blood",boggart:"Unknown",patronus:"Doe",img:"https://static.wikia.nocookie.net/harrypotter/images/a/a2/Snape.jpg"},
+{name:"Minerva McGonagall",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1935,blood:"Half-Blood",boggart:"Unknown",patronus:"Cat",img:"https://static.wikia.nocookie.net/harrypotter/images/3/3f/McGonagall.jpg"},
+{name:"Rubeus Hagrid",gender:"Male",house:"Gryffindor",species:"Half-Human",status:"Alive",film:1,birthYear:1928,blood:"Half-Blood",boggart:"Voldemort",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/2/28/Rubeus_Hagrid.jpg"},
+{name:"Quirinus Quirrell",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1967,blood:"Half-Blood",boggart:"Voldemort",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/9/9c/Quirrell.jpg"},
+{name:"Filius Flitwick",gender:"Male",house:"Ravenclaw",species:"Non-Human Humanoid",status:"Alive",film:1,birthYear:1958,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/3/30/Flitwick.jpg"},
+{name:"Pomona Sprout",gender:"Female",house:"Hufflepuff",species:"Human",status:"Alive",film:1,birthYear:1941,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/cb/Sprout_hbp_promo.jpg"},
+{name:"Argus Filch",gender:"Male",house:"None",species:"Human",status:"Alive",film:1,birthYear:1935,blood:"Squib",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c0/Argus_Filch.jpg"},
+{name:"Rolanda Hooch",gender:"Female",house:"None",species:"Human",status:"Alive",film:1,birthYear:1952,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/8/80/Hooch.jpg"},
+{name:"Garrick Ollivander",gender:"Male",house:"None",species:"Human",status:"Alive",film:1,birthYear:1907,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/1/1d/Garrick_Ollivander.jpg"},
+{name:"Petunia Dursley",gender:"Female",house:"None",species:"Human",status:"Alive",film:1,birthYear:1959,blood:"Muggle",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/2/22/Petunia_Dursley.jpg"},
+{name:"Vernon Dursley",gender:"Male",house:"None",species:"Human",status:"Alive",film:1,birthYear:1955,blood:"Muggle",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/4/40/Vernon_Dursley.jpg"},
+{name:"Dudley Dursley",gender:"Male",house:"None",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Muggle",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e2/Dudley_Dursley.jpg"},
+{name:"Molly Weasley",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1950,blood:"Pure-Blood",boggart:"Dead family",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/a/a4/Mollyweasley.jpg"},
+{name:"Fred Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1978,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c8/Fred_Weasley.jpg"},
+{name:"George Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1978,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/3/3e/George_Weasley.jpg"},
+{name:"Percy Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1976,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/67/Percy_Weasley_HBP.jpg"},
+{name:"Charlie Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1972,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/1/17/Charlie_Weasley_DH.jpg"},
+{name:"Ginny Weasley",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1981,blood:"Pure-Blood",boggart:"Voldemort",patronus:"Horse",img:"https://static.wikia.nocookie.net/harrypotter/images/7/73/Ginny_Weasley.jpg"},
+{name:"Neville Longbottom",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Professor Snape",patronus:"Non-corporeal",img:"https://static.wikia.nocookie.net/harrypotter/images/c/ce/Neville_Longbottom.jpg"},
+{name:"Dean Thomas",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/d/d8/Dean_Thomas.jpg"},
+{name:"Seamus Finnigan",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c1/Seamus_Finnigan.jpg"},
+{name:"Lavender Brown",gender:"Female",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/b/b0/Lavender_Brown.jpg"},
+{name:"Parvati Patil",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Unknown",boggart:"Mummy",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/2/2b/Parvati_Patil.jpg"},
+{name:"Oliver Wood",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1975,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/b/ba/Oliver_Wood.jpg"},
+{name:"Angelina Johnson",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1977,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/6c/Angelina_Johnson.jpg"},
+{name:"Katie Bell",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1979,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/8/82/Katie_Bell.jpg"},
+{name:"Lee Jordan",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:1,birthYear:1978,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/0/0e/Lee_Jordan.jpg"},
+{name:"Draco Malfoy",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Voldemort",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/5/5f/Draco_Malfoy.jpg"},
+{name:"Vincent Crabbe",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/6b/Crabbe_DH.jpg"},
+{name:"Gregory Goyle",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/1/1e/Goyle.jpg"},
+{name:"Marcus Flint",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1975,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/9/9d/Marcus_Flint.jpg"},
+{name:"Pansy Parkinson",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/7/7e/Pansy_Parkinson.jpg"},
+{name:"Susan Bones",gender:"Female",house:"Hufflepuff",species:"Human",status:"Alive",film:1,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/d/dc/Susan_Bones.jpg"},
+{name:"Lily Potter",gender:"Female",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1960,blood:"Muggle-Born",boggart:"Unknown",patronus:"Doe",img:"https://static.wikia.nocookie.net/harrypotter/images/c/cb/Lily_Potter.jpg"},
+{name:"James Potter",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:1,birthYear:1960,blood:"Pure-Blood",boggart:"Unknown",patronus:"Stag",img:"https://static.wikia.nocookie.net/harrypotter/images/5/58/James_Potter.jpg"},
+{name:"Tom Riddle (Voldemort)",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:1,birthYear:1926,blood:"Half-Blood",boggart:"His own death",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/a/a8/Voldemort.jpg"},
+{name:"Sir Nicholas de Mimsy-Porpington",gender:"Male",house:"Gryffindor",species:"Ghost",status:"Dead",film:1,birthYear:1400,blood:"Unknown",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/8/8c/Nearly_Headless_Nick.jpg"},
+{name:"The Bloody Baron",gender:"Male",house:"Slytherin",species:"Ghost",status:"Dead",film:1,birthYear:900,blood:"Unknown",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/8/8b/Bloody_Baron.jpg"},
+{name:"The Fat Friar",gender:"Male",house:"Hufflepuff",species:"Ghost",status:"Dead",film:1,birthYear:1000,blood:"Unknown",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Fat_Friar.jpg"},
+{name:"The Fat Lady",gender:"Female",house:"None",species:"Ghost",status:"Dead",film:1,birthYear:1300,blood:"Unknown",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/3/3b/Fat_Lady.jpg"},
+{name:"Mrs Norris",gender:"Female",house:"None",species:"Animal",status:"Alive",film:1,birthYear:1986,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/b/b6/Mrs._Norris.jpg"},
+{name:"Hedwig",gender:"Female",house:"None",species:"Animal",status:"Dead",film:1,birthYear:1990,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/b/b8/Hedwig_flying.jpg"},
+{name:"Fluffy",gender:"Male",house:"None",species:"Animal",status:"Alive",film:1,birthYear:1990,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/9/9e/Fluffy.jpg"},
+{name:"Norbert the Dragon",gender:"Male",house:"None",species:"Animal",status:"Alive",film:1,birthYear:1992,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/5/5b/Norbert.jpg"},
+{name:"Nagini",gender:"Female",house:"None",species:"Animal",status:"Dead",film:1,birthYear:1900,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/d/d8/Nagini.jpg"},
+{name:"Firenze",gender:"Male",house:"None",species:"Magical Creature",status:"Alive",film:1,birthYear:1960,blood:"None",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/6/6a/Firenze.jpg"},
+// ── FILM 2: Chamber of Secrets ──
+{name:"Arthur Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:2,birthYear:1950,blood:"Pure-Blood",boggart:"Unknown",patronus:"Weasel",img:"https://static.wikia.nocookie.net/harrypotter/images/a/a6/Arthur-Weasley.jpg"},
+{name:"Lucius Malfoy",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:2,birthYear:1954,blood:"Pure-Blood",boggart:"Voldemort",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c5/Lucius_Malfoy.jpg"},
+{name:"Gilderoy Lockhart",gender:"Male",house:"Ravenclaw",species:"Human",status:"Alive",film:2,birthYear:1964,blood:"Half-Blood",boggart:"His own memory loss",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c8/Lockhart.jpg"},
+{name:"Cornelius Fudge",gender:"Male",house:"Hufflepuff",species:"Human",status:"Alive",film:2,birthYear:1939,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/a/a1/Cornelius_Fudge.jpg"},
+{name:"Poppy Pomfrey",gender:"Female",house:"None",species:"Human",status:"Alive",film:2,birthYear:1950,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/2/25/Madam_Pomfrey.jpg"},
+{name:"Hannah Abbott",gender:"Female",house:"Hufflepuff",species:"Human",status:"Alive",film:2,birthYear:1980,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/8/87/Hannah_Abbott.jpg"},
+{name:"Ernie Macmillan",gender:"Male",house:"Hufflepuff",species:"Human",status:"Alive",film:2,birthYear:1980,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e1/ErnieMacmillan.jpg"},
+{name:"Justin Finch-Fletchley",gender:"Male",house:"Hufflepuff",species:"Human",status:"Alive",film:2,birthYear:1980,blood:"Muggle-Born",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/0/0c/Justin_Finch-Fletchley.jpg"},
+{name:"Colin Creevey",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:2,birthYear:1981,blood:"Muggle-Born",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/2/2c/Colin_Creevey.jpg"},
+{name:"Tom the Innkeeper",gender:"Male",house:"None",species:"Human",status:"Alive",film:2,birthYear:1940,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/5/51/Tom_the_innkeeper.jpg"},
+{name:"Moaning Myrtle",gender:"Female",house:"Ravenclaw",species:"Ghost",status:"Dead",film:2,birthYear:1928,blood:"Muggle-Born",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/9/9f/Moaning_Myrtle.jpg"},
+{name:"Dobby",gender:"Male",house:"None",species:"Non-Human Humanoid",status:"Dead",film:2,birthYear:1965,blood:"None",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/3/3d/Dobby.jpg"},
+{name:"Aragog",gender:"Male",house:"None",species:"Animal",status:"Dead",film:2,birthYear:1942,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/9/96/Aragog.jpg"},
+{name:"Fawkes",gender:"Male",house:"None",species:"Animal",status:"Alive",film:2,birthYear:1000,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Fawkes.jpg"},
+// ── FILM 3: Prisoner of Azkaban ──
+{name:"Sirius Black",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:3,birthYear:1959,blood:"Pure-Blood",boggart:"Voldemort",patronus:"Dog",img:"https://static.wikia.nocookie.net/harrypotter/images/7/7e/Sirius_Black.jpg"},
+{name:"Remus Lupin",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:3,birthYear:1960,blood:"Half-Blood",boggart:"Full Moon",patronus:"Wolf",img:"https://static.wikia.nocookie.net/harrypotter/images/c/cf/Remus_Lupin.jpg"},
+{name:"Peter Pettigrew",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:3,birthYear:1960,blood:"Pure-Blood",boggart:"Voldemort",patronus:"Rat",img:"https://static.wikia.nocookie.net/harrypotter/images/3/34/Pettigrew.jpg"},
+{name:"Sybill Trelawney",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:3,birthYear:1958,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/9/91/Trelawney.jpg"},
+{name:"Marge Dursley",gender:"Female",house:"None",species:"Human",status:"Alive",film:3,birthYear:1943,blood:"Muggle",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/a/af/Marge_Dursley.jpg"},
+{name:"Madam Rosmerta",gender:"Female",house:"None",species:"Human",status:"Alive",film:3,birthYear:1960,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/2/21/Madam_Rosmerta.jpg"},
+{name:"Stan Shunpike",gender:"Male",house:"None",species:"Human",status:"Alive",film:3,birthYear:1975,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c5/Stan_Shunpike.jpg"},
+{name:"Buckbeak",gender:"Male",house:"None",species:"Animal",status:"Alive",film:3,birthYear:1991,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/0/03/Buckbeak.jpg"},
+{name:"Crookshanks",gender:"Male",house:"None",species:"Animal",status:"Alive",film:3,birthYear:1983,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/5/5e/Crookshanks.jpg"},
+{name:"Scabbers",gender:"Male",house:"None",species:"Animal",status:"Alive",film:3,birthYear:1960,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/6/6f/Scabbers.jpg"},
+{name:"Errol",gender:"Male",house:"None",species:"Animal",status:"Alive",film:3,birthYear:1978,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/7/7c/Errol.jpg"},
+// ── FILM 4: Goblet of Fire ──
+{name:"Cedric Diggory",gender:"Male",house:"Hufflepuff",species:"Human",status:"Dead",film:4,birthYear:1977,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/9/93/Cedric_Diggory.jpg"},
+{name:"Cho Chang",gender:"Female",house:"Ravenclaw",species:"Human",status:"Alive",film:4,birthYear:1979,blood:"Unknown",boggart:"Unknown",patronus:"Swan",img:"https://static.wikia.nocookie.net/harrypotter/images/5/53/Cho_Chang.jpg"},
+{name:"Padma Patil",gender:"Female",house:"Ravenclaw",species:"Human",status:"Alive",film:4,birthYear:1980,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e5/Padma_Patil.jpg"},
+{name:"Alastor Moody",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:4,birthYear:1930,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/a/a9/Mad-Eye_Moody.jpg"},
+{name:"Bartemius Crouch Jr",gender:"Male",house:"Slytherin",species:"Human",status:"Dead",film:4,birthYear:1962,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/b/bf/Barty_Crouch_Jr.jpg"},
+{name:"Bartemius Crouch Sr",gender:"Male",house:"None",species:"Human",status:"Dead",film:4,birthYear:1940,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/3/33/Barty_Crouch_Sr.jpg"},
+{name:"Amos Diggory",gender:"Male",house:"None",species:"Human",status:"Alive",film:4,birthYear:1950,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/7/73/Amos_Diggory.jpg"},
+{name:"Rita Skeeter",gender:"Female",house:"None",species:"Human",status:"Alive",film:4,birthYear:1951,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c1/Rita_Skeeter.jpg"},
+{name:"Fleur Delacour",gender:"Female",house:"Beauxbatons",species:"Half-Human",status:"Alive",film:4,birthYear:1977,blood:"Half-Blood",boggart:"Voldemort",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/62/Fleur_Delacour.jpg"},
+{name:"Gabrielle Delacour",gender:"Female",house:"Beauxbatons",species:"Half-Human",status:"Alive",film:4,birthYear:1986,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/f/f9/Gabrielle_Delacour.jpg"},
+{name:"Viktor Krum",gender:"Male",house:"Durmstrang",species:"Human",status:"Alive",film:4,birthYear:1976,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/f/fb/Viktor_Krum.jpg"},
+{name:"Olympe Maxime",gender:"Female",house:"Beauxbatons",species:"Half-Human",status:"Alive",film:4,birthYear:1958,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/5/5b/Olympe_Maxime.jpg"},
+{name:"Igor Karkaroff",gender:"Male",house:"Durmstrang",species:"Human",status:"Dead",film:4,birthYear:1950,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/5/59/Igor_Karkaroff.jpg"},
+{name:"Frank Bryce",gender:"Male",house:"None",species:"Human",status:"Dead",film:4,birthYear:1921,blood:"Muggle",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/d/d3/Frank_Bryce.jpg"},
+{name:"Bill Weasley",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:4,birthYear:1970,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/3/34/Bill_Weasley.jpg"},
+{name:"Hungarian Horntail",gender:"Female",house:"None",species:"Animal",status:"Alive",film:4,birthYear:1980,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/7/7a/Hungarian_Horntail.jpg"},
+// ── FILM 5: Order of the Phoenix ──
+{name:"Luna Lovegood",gender:"Female",house:"Ravenclaw",species:"Human",status:"Alive",film:5,birthYear:1981,blood:"Pure-Blood",boggart:"Her mother's death",patronus:"Hare",img:"https://static.wikia.nocookie.net/harrypotter/images/a/ab/Luna_Lovegood.jpg"},
+{name:"Dolores Umbridge",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:5,birthYear:1961,blood:"Half-Blood",boggart:"Unknown",patronus:"Cat",img:"https://static.wikia.nocookie.net/harrypotter/images/a/ac/Dolores_Umbridge.jpg"},
+{name:"Bellatrix Lestrange",gender:"Female",house:"Slytherin",species:"Human",status:"Dead",film:5,birthYear:1951,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/4/4e/Bellatrix_Lestrange.jpg"},
+{name:"Nymphadora Tonks",gender:"Female",house:"Hufflepuff",species:"Human",status:"Dead",film:5,birthYear:1973,blood:"Half-Blood",boggart:"Voldemort",patronus:"Wolf",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e7/Tonks.jpg"},
+{name:"Kingsley Shacklebolt",gender:"Male",house:"None",species:"Human",status:"Alive",film:5,birthYear:1959,blood:"Unknown",boggart:"Unknown",patronus:"Lynx",img:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Kingsley_Shacklebolt.jpg"},
+{name:"Amelia Bones",gender:"Female",house:"None",species:"Human",status:"Dead",film:5,birthYear:1950,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/64/Amelia_Bones.jpg"},
+{name:"Arabella Figg",gender:"Female",house:"None",species:"Human",status:"Alive",film:5,birthYear:1938,blood:"Squib",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/2/28/Arabella_Figg.jpg"},
+{name:"Antonin Dolohov",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:5,birthYear:1945,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/8/8d/Dolohov.jpg"},
+{name:"Kreacher",gender:"Male",house:"None",species:"Non-Human Humanoid",status:"Alive",film:5,birthYear:1896,blood:"None",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/9/9e/Kreacher.jpg"},
+{name:"Grawp",gender:"Male",house:"None",species:"Magical Creature",status:"Alive",film:5,birthYear:1983,blood:"None",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/4/42/Grawp.jpg"},
+{name:"Thestral",gender:"Male",house:"None",species:"Animal",status:"Alive",film:5,birthYear:1980,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/e/ef/Thestral.jpg"},
+{name:"Alice Longbottom",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:5,birthYear:1959,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/60/Alice_Longbottom.jpg"},
+{name:"Frank Longbottom",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:5,birthYear:1958,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/5/50/Frank_Longbottom.jpg"},
+{name:"Aberforth Dumbledore",gender:"Male",house:"None",species:"Human",status:"Alive",film:5,birthYear:1884,blood:"Half-Blood",boggart:"Unknown",patronus:"Goat",img:"https://static.wikia.nocookie.net/harrypotter/images/1/12/Aberforth_Dumbledore.jpg"},
+{name:"Phineas Nigellus Black",gender:"Male",house:"Slytherin",species:"Ghost",status:"Dead",film:5,birthYear:1847,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/3/38/Phineas_Nigellus.jpg"},
+// ── FILM 6: Half-Blood Prince ──
+{name:"Narcissa Malfoy",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:6,birthYear:1955,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/7/70/Narcissa_Malfoy.jpg"},
+{name:"Horace Slughorn",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:6,birthYear:1924,blood:"Pure-Blood",boggart:"Voldemort",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/9/9d/Horace_Slughorn.jpg"},
+{name:"Fenrir Greyback",gender:"Male",house:"None",species:"Human",status:"Alive",film:6,birthYear:1960,blood:"Unknown",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/f/f7/Fenrir_Greyback.jpg"},
+{name:"Cormac McLaggen",gender:"Male",house:"Gryffindor",species:"Human",status:"Alive",film:6,birthYear:1978,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/7/78/McLaggen.jpg"},
+{name:"Romilda Vane",gender:"Female",house:"Gryffindor",species:"Human",status:"Alive",film:6,birthYear:1982,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/4/40/Romilda_Vane.jpg"},
+{name:"Corban Yaxley",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:6,birthYear:1950,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c5/Yaxley.jpg"},
+{name:"Rufus Scrimgeour",gender:"Male",house:"Gryffindor",species:"Human",status:"Dead",film:6,birthYear:1944,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/3/3c/Rufus_Scrimgeour.jpg"},
+{name:"Blaise Zabini",gender:"Male",house:"Slytherin",species:"Human",status:"Alive",film:6,birthYear:1980,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/e/ec/Blaise_Zabini.jpg"},
+{name:"Pigwidgeon",gender:"Male",house:"None",species:"Animal",status:"Alive",film:6,birthYear:1994,blood:"None",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c4/Pigwidgeon.jpg"},
+// ── FILM 7: Deathly Hallows Part 1 ──
+{name:"Mundungus Fletcher",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1962,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/2/24/Mundungus_Fletcher.jpg"},
+{name:"Xenophilius Lovegood",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1956,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e1/Xenophilius_Lovegood.jpg"},
+{name:"Bathilda Bagshot",gender:"Female",house:"None",species:"Human",status:"Dead",film:7,birthYear:1881,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/0/09/Bathilda_Bagshot.jpg"},
+{name:"Charity Burbage",gender:"Female",house:"None",species:"Human",status:"Dead",film:7,birthYear:1960,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/c/c0/Charity_Burbage.jpg"},
+{name:"Gellert Grindelwald",gender:"Male",house:"None",species:"Human",status:"Dead",film:7,birthYear:1883,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/6c/Grindelwald.jpg"},
+{name:"Gregorovitch",gender:"Male",house:"None",species:"Human",status:"Dead",film:7,birthYear:1930,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/2/2d/Gregorovitch.jpg"},
+{name:"Albert Runcorn",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1955,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/d/d9/Albert_Runcorn.jpg"},
+{name:"Reg Cattermole",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1962,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/8/8f/Reg_Cattermole.jpg"},
+{name:"Mary Cattermole",gender:"Female",house:"None",species:"Human",status:"Alive",film:7,birthYear:1966,blood:"Muggle-Born",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/63/Mary_Cattermole.jpg"},
+{name:"Scabior",gender:"Male",house:"None",species:"Human",status:"Dead",film:7,birthYear:1968,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/d/d5/Scabior.jpg"},
+{name:"Griphook",gender:"Male",house:"None",species:"Non-Human Humanoid",status:"Dead",film:7,birthYear:1900,blood:"None",boggart:"Unknown",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e6/Griphook.jpg"},
+{name:"Pius Thicknesse",gender:"Male",house:"None",species:"Human",status:"Alive",film:7,birthYear:1953,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/8/8a/Pius_Thicknesse.jpg"},
+{name:"Mafalda Hopkirk",gender:"Female",house:"None",species:"Human",status:"Alive",film:7,birthYear:1958,blood:"Unknown",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e7/Mafalda_Hopkirk.jpg"},
+// ── FILM 8: Deathly Hallows Part 2 ──
+{name:"Helena Ravenclaw",gender:"Female",house:"Ravenclaw",species:"Ghost",status:"Dead",film:8,birthYear:1000,blood:"Unknown",boggart:"None",patronus:"None",img:"https://static.wikia.nocookie.net/harrypotter/images/4/42/Helena_Ravenclaw.jpg"},
+{name:"Ariana Dumbledore",gender:"Female",house:"None",species:"Human",status:"Dead",film:8,birthYear:1885,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/e/e4/Ariana_Dumbledore.jpg"},
+{name:"Astoria Greengrass",gender:"Female",house:"Slytherin",species:"Human",status:"Alive",film:8,birthYear:1982,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/6/64/Astoria_Greengrass.jpg"},
+{name:"Albus Severus Potter",gender:"Male",house:"None",species:"Human",status:"Alive",film:8,birthYear:2006,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/4/40/Albus_Potter_DH2.jpg"},
+{name:"James Sirius Potter",gender:"Male",house:"None",species:"Human",status:"Alive",film:8,birthYear:2004,blood:"Half-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/a/af/James_Sirius_Potter.jpg"},
+{name:"Scorpius Malfoy",gender:"Male",house:"None",species:"Human",status:"Alive",film:8,birthYear:2006,blood:"Pure-Blood",boggart:"Unknown",patronus:"Unknown",img:"https://static.wikia.nocookie.net/harrypotter/images/b/b3/Scorpius_Malfoy_DH2.jpg"},
 ];
-let target=null, guesses=[], gameOver=false;
+
+const FILM_NAMES={1:"Philosopher's Stone 1",2:"Chamber of Secrets 2",3:"Prisoner of Azkaban 3",4:"Goblet of Fire 4",5:"Order of the Phoenix 5",6:"Half-Blood Prince 6",7:"Deathly Hallows 7.1",8:"Deathly Hallows 7.2"};
+const SPECIES_ICON={Human:"🧙","Half-Human":"🧬","Non-Human Humanoid":"👺","Magical Creature":"✨",Ghost:"👻",Animal:"🐾"};
+
+let target=null,guesses=[],gameOver=false;
 
 function startGame(){
-  target = CHARACTERS[Math.floor(Math.random()*CHARACTERS.length)];
-  guesses=[]; gameOver=false;
+  target=CHARACTERS[Math.floor(Math.random()*CHARACTERS.length)];
+  guesses=[];gameOver=false;
   document.getElementById('guesses-body').innerHTML='';
   document.getElementById('win-box').style.display='none';
   document.getElementById('lose-box').style.display='none';
@@ -659,30 +287,10 @@ function startGame(){
   updateCounter();
 }
 
-function setMsg(txt,cls){
-  const el=document.getElementById('msg');
-  el.textContent=txt; el.className=cls||'';
-}
-function updateCounter(){
-  const el=document.getElementById('tries-counter');
-  if(gameOver){el.textContent='';return;}
-  el.textContent=`Tries: ${guesses.length} / 10`;
-}
-function speciesEmoji(s){
-  const m={'Human':'🧙','Half-Giant':'👣','Ghost':'👻','House-Elf':'👂','Werewolf':'🐺','Centaur':'🐴','Giant':'💪','Phoenix':'🔥','Owl':'🦉','Cat':'🐱','Cat/Kneazle':'🐱','Rat':'🐭','Three-Headed Dog':'🐶','Dragon':'🐉','Hippogriff':'🦅','Acromantula':'🕷️','Snake':'🐍','Goblin':'👺','Poltergeist':'💨','Muggle':'👤','Squib':'👤','Half-Goblin':'👺','Part-Veela':'✨','Thestral':'🦇'};
-  return m[s]||'❓';
-}
-
+function setMsg(t,c){const e=document.getElementById('msg');e.textContent=t;e.className=c||'';}
+function updateCounter(){const e=document.getElementById('tries-counter');if(gameOver){e.textContent='';return;}e.textContent=`Tries: ${guesses.length} / 10`;}
 function cmp(a,b){return a===b?'correct':'wrong';}
-function cmpNum(a,b){if(a===b)return'correct';if(Math.abs(a-b)<=2)return'partial';return'wrong';}
-function arrow(a,b){if(a===b)return'';return a<b?' ▲':' ▼';}
-
-function makeCell(txt,cls,extra,el='td'){
-  const td=document.createElement(el);
-  td.className='cell '+cls;
-  td.textContent=txt+(extra||'');
-  return td;
-}
+function makeCell(txt,cls){const td=document.createElement('td');td.className='cell '+cls;td.textContent=txt;return td;}
 
 function submitGuess(n){
   if(gameOver)return;
@@ -696,55 +304,56 @@ function submitGuess(n){
 
   const tr=document.createElement('tr');
   tr.className='row-anim';
+
   const nameTd=document.createElement('td');
   nameTd.className='cell name-cell '+(char.name===target.name?'correct':'wrong');
   nameTd.textContent=char.name;
   tr.appendChild(nameTd);
 
-  // Image cell
   const imgTd=document.createElement('td');
   imgTd.className='cell img-cell';
-  if(char.image){
+  if(char.img){
     const img=document.createElement('img');
-    img.src=char.image;
     img.alt=char.name;
-    img.onerror=function(){this.parentNode.innerHTML='<div class="ph">'+speciesEmoji(char.species)+'</div>';};
+    img.onerror=function(){this.parentNode.innerHTML='<div class="ph">'+(SPECIES_ICON[char.species]||'❓')+'</div>';};
+    img.src=char.img;
     imgTd.appendChild(img);
   } else {
-    imgTd.innerHTML='<div class="ph">'+speciesEmoji(char.species)+'</div>';
+    imgTd.innerHTML='<div class="ph">'+(SPECIES_ICON[char.species]||'❓')+'</div>';
   }
   tr.appendChild(imgTd);
+
   tr.appendChild(makeCell(char.gender,cmp(char.gender,target.gender)));
   tr.appendChild(makeCell(char.house,cmp(char.house,target.house)));
   tr.appendChild(makeCell(char.species,cmp(char.species,target.species)));
   tr.appendChild(makeCell(char.status,cmp(char.status,target.status)));
-  tr.appendChild(makeCell('Film '+char.film, cmpNum(char.film,target.film), arrow(char.film,target.film)));
-  // Birth year: show only arrow, not the actual year
-  const byRes = char.birthYear===target.birthYear?'correct':'wrong';
-  const byArrow = char.birthYear===target.birthYear?'✓': (char.birthYear<target.birthYear?'▲ Born Later':'▼ Born Earlier');
-  tr.appendChild(makeCell(byArrow, byRes));
+  tr.appendChild(makeCell(FILM_NAMES[char.film],cmp(char.film,target.film)));
+
+  const byMatch=char.birthYear===target.birthYear;
+  const byArrow=byMatch?'':(char.birthYear<target.birthYear?' ▲':' ▼');
+  const byTd=document.createElement('td');
+  byTd.className='cell '+(byMatch?'correct':'wrong');
+  byTd.textContent=(char.birthYear<=900?'Ancient':String(char.birthYear))+byArrow;
+  tr.appendChild(byTd);
+
   tr.appendChild(makeCell(char.blood,cmp(char.blood,target.blood)));
   tr.appendChild(makeCell(char.boggart,cmp(char.boggart,target.boggart)));
   tr.appendChild(makeCell(char.patronus,cmp(char.patronus,target.patronus)));
   document.getElementById('guesses-body').appendChild(tr);
 
-  if(guesses.length===4&&!gameOver){
-    document.getElementById('hint-area').innerHTML=
-      `<span class="hint-badge">⚡ Hint: The character is <strong>${target.status}</strong></span>`;
-  }
+  if(guesses.length===4&&!gameOver)
+    document.getElementById('hint-area').innerHTML=`<span class="hint-badge">⚡ Hint: The character is <strong>${target.status}</strong></span>`;
 
   if(char.name===target.name){
     gameOver=true;
     document.getElementById('win-box').style.display='block';
-    document.getElementById('win-detail').textContent=
-      `You found ${target.name} in ${guesses.length} guess${guesses.length>1?'es':''}!`;
+    document.getElementById('win-detail').textContent=`You found ${target.name} in ${guesses.length} guess${guesses.length>1?'es':''}!`;
     document.getElementById('char-input').disabled=true;
     document.getElementById('guess-btn').disabled=true;
   } else if(guesses.length>=10){
     gameOver=true;
     document.getElementById('lose-box').style.display='block';
-    document.getElementById('lose-detail').innerHTML=
-      `The answer was: <strong>${target.name}</strong>`;
+    document.getElementById('lose-detail').innerHTML=`The answer was: <strong>${target.name}</strong>`;
     document.getElementById('char-input').disabled=true;
     document.getElementById('guess-btn').disabled=true;
   }
@@ -753,28 +362,18 @@ function submitGuess(n){
 
 const input=document.getElementById('char-input');
 const sugg=document.getElementById('suggestions');
-
 input.addEventListener('input',()=>{
   const q=input.value.toLowerCase().trim();
   sugg.innerHTML='';
   if(!q){sugg.style.display='none';return;}
-  const matches=CHARACTERS.filter(c=>
-    c.name.toLowerCase().includes(q)&&!guesses.find(g=>g.name===c.name)
-  ).slice(0,8);
-  if(!matches.length){sugg.style.display='none';return;}
-  matches.forEach(c=>{
-    const item=document.createElement('div');
-    item.className='sugg-item';
-    item.textContent=c.name;
-    item.addEventListener('mousedown',e=>{e.preventDefault();input.value=c.name;sugg.style.display='none';});
-    sugg.appendChild(item);
-  });
+  const m=CHARACTERS.filter(c=>c.name.toLowerCase().includes(q)&&!guesses.find(g=>g.name===c.name)).slice(0,8);
+  if(!m.length){sugg.style.display='none';return;}
+  m.forEach(c=>{const i=document.createElement('div');i.className='sugg-item';i.textContent=c.name;i.addEventListener('mousedown',e=>{e.preventDefault();input.value=c.name;sugg.style.display='none';});sugg.appendChild(i);});
   sugg.style.display='block';
 });
 document.getElementById('guess-btn').addEventListener('click',()=>submitGuess(input.value));
 input.addEventListener('keydown',e=>{if(e.key==='Enter')submitGuess(input.value);});
 document.addEventListener('click',e=>{if(!sugg.contains(e.target)&&e.target!==input)sugg.style.display='none';});
-
 startGame();
 </script>
 </body>
