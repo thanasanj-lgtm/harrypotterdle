@@ -344,14 +344,24 @@ function submitGuess(n){
   nameTd.textContent=char.name;
   tr.appendChild(nameTd);
 
-  // Image cell
+  // Image cell — use Google image search thumbnail proxy
   const imgTd=document.createElement('td');
   imgTd.className='cell img-cell';
   if(char.img){
     const img=document.createElement('img');
     img.alt=char.name;
-    img.onerror=function(){this.parentNode.innerHTML='<div class="ph">'+(SPECIES_ICON[char.s]||'❓')+'</div>';};
-    img.src=char.img;
+    img.loading='lazy';
+    img.onerror=function(){
+      // fallback: try alternate source, then emoji
+      if(!this.dataset.tried){
+        this.dataset.tried='1';
+        this.src='https://images.weserv.nl/?url='+encodeURIComponent(char.img)+'&w=58&h=58&fit=cover&we&output=jpg';
+      } else {
+        this.parentNode.innerHTML='<div class="ph">'+(SPECIES_ICON[char.s]||'❓')+'</div>';
+      }
+    };
+    // Use weserv.nl as CORS proxy/CDN to bypass hotlink block
+    img.src='https://images.weserv.nl/?url='+encodeURIComponent(char.img)+'&w=58&h=58&fit=cover&we&output=jpg';
     imgTd.appendChild(img);
   } else {
     imgTd.innerHTML='<div class="ph">'+(SPECIES_ICON[char.s]||'❓')+'</div>';
