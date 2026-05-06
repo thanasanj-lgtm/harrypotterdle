@@ -79,6 +79,7 @@
   </div>
   <div id="hint-area"></div>
   <div id="tries-counter"></div>
+  <div id="countdown" style="text-align:center;font-size:15px;color:var(--gold);margin-bottom:8px;font-family:'Cinzel',serif;letter-spacing:1px;opacity:0.8;"></div>
   <div id="msg">Start guessing!</div>
   <div class="search-wrap">
     <div class="search-row">
@@ -298,10 +299,63 @@ const CHARACTERS=[
 const FILM_NAMES={1:"Philosopher's Stone 1",2:"Chamber of Secrets 2",3:"Prisoner of Azkaban 3",4:"Goblet of Fire 4",5:"Order of the Phoenix 5",6:"Half-Blood Prince 6",7:"Deathly Hallows 7.1",8:"Deathly Hallows 7.2"};
 const SPECIES_ICON={Human:"🧙","Half-Human":"🧬","Non-Human Humanoid":"👺","Magical Creature":"✨",Ghost:"👻",Animal:"🐾"};
 
+// ── Shared answer: same for everyone, changes every 2 hours ──
+function getPeriodIndex(){
+  const now=new Date();
+  // UTC-based: period = floor(unix_hours / 2)
+  return Math.floor(now.getTime()/1000/3600/2);
+}
+
+function seededRandom(seed){
+  // Simple LCG
+  let s=seed%2147483647;
+  if(s<=0)s+=2147483646;
+  s=(s*16807)%2147483647;
+  return (s-1)/2147483646;
+}
+
+function getTarget(){
+  const idx=getPeriodIndex();
+  const i=Math.floor(seededRandom(idx)*CHARACTERS.length);
+  return CHARACTERS[i];
+}
+
+function getNextChangeMs(){
+  const now=new Date().getTime();
+  const twoHourMs=2*60*60*1000;
+  return twoHourMs-(now%twoHourMs);
+}
+
+function formatCountdown(ms){
+  const totalSec=Math.floor(ms/1000);
+  const h=Math.floor(totalSec/3600);
+  const m=Math.floor((totalSec%3600)/60);
+  const s=totalSec%60;
+  return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+let countdownInterval=null;
+
+function startCountdown(){
+  const el=document.getElementById('countdown');
+  if(!el)return;
+  if(countdownInterval)clearInterval(countdownInterval);
+  countdownInterval=setInterval(()=>{
+    const ms=getNextChangeMs();
+    el.textContent=`Next character in: ${formatCountdown(ms)}`;
+    // Auto-refresh when period changes
+    if(ms<1000){
+      clearInterval(countdownInterval);
+      setTimeout(()=>{startGame();startCountdown();},1100);
+    }
+  },1000);
+  el.textContent=`Next character in: ${formatCountdown(getNextChangeMs())}`;
+}
+
 let target=null,guesses=[],gameOver=false;
 
 function startGame(){
-  target=CHARACTERS[Math.floor(Math.random()*CHARACTERS.length)];
+  target=getTarget();
   guesses=[];gameOver=false;
   document.getElementById('guesses-body').innerHTML='';
   document.getElementById('win-box').style.display='none';
@@ -433,6 +487,7 @@ input.addEventListener('keydown',e=>{if(e.key==='Enter')submitGuess(input.value)
 document.addEventListener('click',e=>{if(!sugg.contains(e.target)&&e.target!==input)sugg.style.display='none';});
 
 startGame();
+startCountdown();
 </script>
 </body>
 </html>
